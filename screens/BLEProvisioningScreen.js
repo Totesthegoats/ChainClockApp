@@ -13,9 +13,10 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BleManager } from 'react-native-ble-plx';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from './styles';
 
-const DEVICE_NAME = 'ChoclChain';
+const DEVICE_NAME = 'ClockChain';
 const SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
 const SSID_CHAR_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
 const PASS_CHAR_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a9';
@@ -168,7 +169,7 @@ export default function BLEProvisioningScreen() {
       managerRef.current?.stopDeviceScan();
       setConnectionStatus((prev) => {
         if (prev === 'scanning') {
-          setError('Device not found. Make sure ChoclChain is powered on and nearby.');
+          setError('Device not found. Make sure ClockChain is powered on and nearby.');
           return 'disconnected';
         }
         return prev;
@@ -206,11 +207,15 @@ export default function BLEProvisioningScreen() {
       subscriptionRef.current = deviceRef.current.monitorCharacteristicForService(
         SERVICE_UUID,
         STATUS_CHAR_UUID,
-        (err, characteristic) => {
+        async (err, characteristic) => {
           if (err) return;
           if (characteristic?.value) {
-            const status = fromBase64(characteristic.value);
-            setWifiStatus(status.trim());
+            const status = fromBase64(characteristic.value).trim();
+            setWifiStatus(status);
+            const ipMatch = status.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/);
+            if (ipMatch) {
+              await AsyncStorage.setItem('@esp32_ip', ipMatch[1]).catch(() => {});
+            }
           }
         },
       );
@@ -241,8 +246,8 @@ export default function BLEProvisioningScreen() {
 
   const statusIndicator = {
     disconnected: { color: '#666', label: 'No Device', sub: 'Tap below to scan' },
-    scanning: { color: COLORS.warning, label: 'Scanning', sub: 'Looking for ChoclChain...' },
-    connected: { color: COLORS.success, label: 'Connected', sub: 'ChoclChain' },
+    scanning: { color: COLORS.warning, label: 'Scanning', sub: 'Looking for ClockChain...' },
+    connected: { color: COLORS.success, label: 'Connected', sub: 'ClockChain' },
   };
 
   const current = statusIndicator[connectionStatus];
@@ -416,7 +421,7 @@ export default function BLEProvisioningScreen() {
               <Text style={s.cardTitle}>Getting Started</Text>
             </View>
             {[
-              { step: '1', text: 'Power on your ChoclChain device' },
+              { step: '1', text: 'Power on your ClockChain device' },
               { step: '2', text: 'Enable Bluetooth on your phone' },
               { step: '3', text: 'Tap "Scan for Device" above' },
               { step: '4', text: 'Enter your WiFi credentials' },

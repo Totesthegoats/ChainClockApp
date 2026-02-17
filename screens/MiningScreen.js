@@ -18,8 +18,8 @@ export default function MiningScreen() {
       const hashData = await hashRes.json();
       const diffAdj = await diffRes.json();
 
-      const latestHash = hashData.hashrates[hashData.hashrates.length - 1].avgHashrate;
-      const latestDiff = hashData.difficulty[hashData.difficulty.length - 1].difficulty;
+      const latestHash = hashData.currentHashrate || hashData.hashrates[hashData.hashrates.length - 1]?.avgHashrate;
+      const latestDiff = hashData.currentDifficulty;
 
       const hashrate = (latestHash / 1e18).toFixed(2);
       const difficulty = (latestDiff / 1e12).toFixed(2);

@@ -21,8 +21,11 @@
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         },
-        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to configure WiFi on your ChoclChain device.",
-        "NSBluetoothPeripheralUsageDescription": "This app uses Bluetooth to configure WiFi on your ChoclChain device."
+        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to configure WiFi on your ClockChain device.",
+        "NSBluetoothPeripheralUsageDescription": "This app uses Bluetooth to configure WiFi on your ClockChain device."
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     },
     "android": {
@@ -34,8 +37,11 @@
       "permissions": [
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
-        "android.permission.ACCESS_FINE_LOCATION"
-      ]
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,6 +49,14 @@
     "plugins": [
       "expo-asset",
       "react-native-ble-plx"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fbcd60bb-e91b-4eb3-9af9-40b2c5dab639"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fbcd60bb-e91b-4eb3-9af9-40b2c5dab639"
+    }
   }
 }
